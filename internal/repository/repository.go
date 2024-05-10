@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"Bakers_beckend/internal/entities"
+	"Bakers_backend/internal/entities"
 	"context"
 )
 
@@ -13,7 +13,6 @@ type AdminRepo interface {
 	DeleteAdmin(ctx context.Context, adminID int) error
 	CreateBread(ctx context.Context, bread entities.BreadBase) (int, error)
 }
-
 
 type UserRepo interface {
 	Create(ctx context.Context, create entities.UserCreate) (int, error)

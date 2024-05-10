@@ -1,8 +1,9 @@
 package admin
 
 import (
-	"Bakers_beckend/internal/entities"
-	"Bakers_beckend/internal/repository"
+	"Bakers_backend/internal/entities"
+	"Bakers_backend/internal/repository"
+	"Bakers_backend/pkg/customerr"
 	"context"
 	"errors"
 	"github.com/jmoiron/sqlx"
@@ -16,16 +17,16 @@ func (adm AdminRepo) CreateAdmin(ctx context.Context, admin entities.AdminCreate
 	var id int
 	transaction, err := adm.db.BeginTxx(ctx, nil)
 	if err != nil {
-		return 0, err
+		return 0, customerr.ErrorMessage(0, err)
 	}
 	row := transaction.QueryRowContext(ctx, `insert into admin (phone, hashed_password) values ($1, $2) returning id;`,
 		admin.Phone, admin.Password)
 	err = row.Scan(&id)
 	if err != nil {
-		return 0, err
+		return 0, customerr.ErrorMessage(6, err)
 	}
 	if err := transaction.Commit(); err != nil {
-		return 0, err
+		return 0, customerr.ErrorMessage(5, err)
 	}
 	return id, nil
 }

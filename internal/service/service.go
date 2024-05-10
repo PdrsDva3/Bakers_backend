@@ -1,7 +1,7 @@
 package service
 
 import (
-	"Bakers_beckend/internal/entities"
+	"Bakers_backend/internal/entities"
 	"context"
 )
 
