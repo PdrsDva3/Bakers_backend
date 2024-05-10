@@ -3,7 +3,8 @@
 CREATE TABLE IF NOT EXISTS users(
     id              SERIAL NOT NULL PRIMARY KEY,
     phone           BIGINT UNIQUE,
-    hashed_password VARCHAR
+    hashed_password VARCHAR,
+    name VARCHAR
 );
 
 CREATE TABLE IF NOT EXISTS admin(
