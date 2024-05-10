@@ -1,6 +1,11 @@
 package entities
 
+type OrderBase struct {
+	UserID int   `json:"user_id"`
+	Breads []int `json:"breads"`
+}
+
 type Order struct {
-	ID     int `json:id`
-	UserID int `json:user_id`
+	OrderBase
+	ID int `json:"id"`
 }
