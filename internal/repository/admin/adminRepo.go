@@ -42,14 +42,15 @@ func (adm AdminRepo) GetAdminByID(ctx context.Context, adminID int) (*entities.A
 	return &user, nil
 }
 
-func (adm AdminRepo) GetPasswordByPhone(ctx context.Context, phone int) (string, error) {
+func (adm AdminRepo) GetPasswordByPhone(ctx context.Context, phone int64) (int, string, error) {
 	var password string
-	row := adm.db.QueryRowContext(ctx, `select hashed_password from admin where phone = $1`, phone)
-	err := row.Scan(&password)
+	var id int
+	row := adm.db.QueryRowContext(ctx, `select hashed_password, id from admin where phone = $1`, phone)
+	err := row.Scan(&password, &id)
 	if err != nil {
-		return "", err
+		return 0, "", err
 	}
-	return password, nil
+	return id, password, nil
 }
 
 func (adm AdminRepo) UpdatePasswordByID(ctx context.Context, adminID int, newPassword string) error {
@@ -108,25 +109,7 @@ func (adm AdminRepo) DeleteAdmin(ctx context.Context, adminID int) error {
 	return nil
 }
 
-func (adm AdminRepo) CreateBread(ctx context.Context, bread entities.BreadBase) (int, error) {
-	var id int
-	transaction, err := adm.db.BeginTxx(ctx, nil)
-	if err != nil {
-		return 0, err
-	}
-	row := transaction.QueryRowContext(ctx, `insert into bread (name, price, description, count, photo) values ($1, $2, $3, $4, $5) returning id;`,
-		bread.Name, bread.Price, bread.Description, bread.Count, bread.Photo)
-	err = row.Scan(&id)
-	if err != nil {
-		return 0, err
-	}
-	if err := transaction.Commit(); err != nil {
-		return 0, err
-	}
-	return id, nil
-}
-
-func NewAdminRepo(db *sqlx.DB) repository.AdminRepo {
+func InitAdminRepo(db *sqlx.DB) repository.AdminRepo {
 	return AdminRepo{
 		db: db,
 	}
