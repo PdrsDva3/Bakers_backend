@@ -1,0 +1,87 @@
+definitions:
+  entities.AdminCreate:
+    properties:
+      password:
+        type: string
+      phone:
+        type: integer
+    type: object
+  entities.UserCreate:
+    properties:
+      name:
+        type: string
+      password:
+        type: string
+      phone:
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /admin/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: admin create
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/entities.AdminCreate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully created user, returning JWT and Session
+          schema:
+            type: integer
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create admin
+      tags:
+      - public
+  /user/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: user create
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/entities.UserCreate'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully created user
+          schema:
+            type: integer
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create user
+      tags:
+      - public
+swagger: "2.0"
