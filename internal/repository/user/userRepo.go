@@ -29,9 +29,11 @@ func (user Repository) Create(ctx context.Context, create entities.UserCreate) (
 	err = row.Scan(&id)
 	if err != nil {
 		return 0, customerr.ErrorMessage(6, err)
-
 	}
-
+	if err := transaction.Commit(); err != nil {
+		return 0, customerr.ErrorMessage(5, err)
+	}
+	return id, nil
 }
 
 func (user Repository) Get(ctx context.Context, id int) (entities.User, error) {

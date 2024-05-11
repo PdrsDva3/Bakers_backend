@@ -5,6 +5,15 @@ import (
 	"context"
 )
 
+type AdminRepo interface {
+	CreateAdmin(ctx context.Context, admin entities.AdminCreate) (int, error)
+	GetAdminByID(ctx context.Context, adminID int) (*entities.Admin, error)
+	GetPasswordByPhone(ctx context.Context, phone int) (string, error)
+	UpdatePasswordByID(ctx context.Context, adminID int, newPassword string) error
+	DeleteAdmin(ctx context.Context, adminID int) error
+	CreateBread(ctx context.Context, bread entities.BreadBase) (int, error)
+}
+
 type UserRepo interface {
 	Create(ctx context.Context, create entities.UserCreate) (int, error)
 	Get(ctx context.Context, id int) (entities.User, error)

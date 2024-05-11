@@ -1,0 +1,13 @@
+{"level":"info","time":"2024-05-10T19:21:43Z","caller":"C:/Users/aria_/GolandProjects/Bakers_backend/pkg/logger/logger.go:15","message":"Config initialized"}
+{"level":"info","time":"2024-05-10T19:22:15Z","caller":"C:/Users/aria_/GolandProjects/Bakers_backend/pkg/logger/logger.go:15","message":"Config initialized"}
+{"level":"info","time":"2024-05-10T19:22:15Z","caller":"C:/Users/aria_/GolandProjects/Bakers_backend/pkg/logger/logger.go:15","message":"Database initialized"}
+{"level":"info","time":"2024-05-10T19:30:26Z","caller":"C:/Users/aria_/GolandProjects/Bakers_backend/pkg/logger/logger.go:15","message":"Config initialized"}
+{"level":"info","time":"2024-05-10T19:30:26Z","caller":"C:/Users/aria_/GolandProjects/Bakers_backend/pkg/logger/logger.go:15","message":"Database initialized"}
+{"level":"info","time":"2024-05-10T19:33:19Z","caller":"C:/Users/aria_/GolandProjects/Bakers_backend/pkg/logger/logger.go:15","message":"Config initialized"}
+{"level":"info","time":"2024-05-10T19:33:20Z","caller":"C:/Users/aria_/GolandProjects/Bakers_backend/pkg/logger/logger.go:15","message":"Database initialized"}
+{"level":"info","time":"2024-05-10T19:36:35Z","caller":"C:/Users/aria_/GolandProjects/Bakers_backend/pkg/logger/logger.go:15","message":"Config initialized"}
+{"level":"info","time":"2024-05-10T19:36:35Z","caller":"C:/Users/aria_/GolandProjects/Bakers_backend/pkg/logger/logger.go:15","message":"Database initialized"}
+{"level":"info","time":"2024-05-10T19:43:36Z","caller":"C:/Users/aria_/GolandProjects/Bakers_backend/pkg/logger/logger.go:15","message":"Config initialized"}
+{"level":"info","time":"2024-05-10T19:43:36Z","caller":"C:/Users/aria_/GolandProjects/Bakers_backend/pkg/logger/logger.go:15","message":"Database initialized"}
+{"level":"info","time":"2024-05-10T19:46:00Z","caller":"C:/Users/aria_/GolandProjects/Bakers_backend/pkg/logger/logger.go:15","message":"Config initialized"}
+{"level":"info","time":"2024-05-10T19:46:00Z","caller":"C:/Users/aria_/GolandProjects/Bakers_backend/pkg/logger/logger.go:15","message":"Database initialized"}

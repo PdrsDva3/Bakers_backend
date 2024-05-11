@@ -1,6 +1,7 @@
 package main
 
 import (
+	"Bakers_backend/internal/delivery"
 	"Bakers_backend/pkg/config"
 	"Bakers_backend/pkg/database"
 	"Bakers_backend/pkg/logger"
@@ -18,5 +19,6 @@ func main() {
 	db := database.GetDB()
 	log.Info("Database initialized")
 
-	db.Close() // !! УДАЛИТЬ ПРИ ЗАПУСКЕ
+	delivery.Start(db, log)
+	//db.Close() // !! УДАЛИТЬ ПРИ ЗАПУСКЕ
 }
