@@ -19,7 +19,7 @@ func InitAdminHandler(service service.AdminService) AdminHandler {
 }
 
 // @Summary Create admin
-// @Tags public
+// @Tags admin
 // @Accept  json
 // @Produce  json
 // @Param data body entities.AdminCreate true "admin create"
@@ -47,7 +47,7 @@ func (p AdminHandler) CreateAdmin(c *gin.Context) {
 }
 
 // @Summary ChangePWD admin
-// @Tags public
+// @Tags admin
 // @Accept  json
 // @Produce  json
 // @Param data body entities.AdminChangePWD true "admin change pwd"
@@ -75,7 +75,7 @@ func (p AdminHandler) ChangePWD(c *gin.Context) {
 }
 
 // @Summary Login admin
-// @Tags public
+// @Tags admin
 // @Accept  json
 // @Produce  json
 // @Param data body entities.AdminLogin true "admin login"
@@ -103,7 +103,7 @@ func (p AdminHandler) LoginAdmin(c *gin.Context) {
 }
 
 // @Summary Get admin
-// @Tags public
+// @Tags admin
 // @Accept  json
 // @Produce  json
 // @Param id query int true "AdminID"
@@ -131,11 +131,11 @@ func (p AdminHandler) GetAdmin(c *gin.Context) {
 }
 
 // @Summary Delite admin
-// @Tags public
+// @Tags admin
 // @Accept  json
 // @Produce  json
 // @Param id query int true "AdminID"
-// @Success 200 {object} int "Successfully delite user, returning JWT and Session"
+// @Success 200 {object} int "Successfully delete user, returning JWT and Session"
 // @Failure 400 {object} map[string]string "Invalid input"
 // @Failure 500 {object} map[string]string "Internal server error"
 // @Router /admin/delete/{id} [delete]

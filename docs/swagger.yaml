@@ -1,10 +1,37 @@
 definitions:
+  entities.AdminChangePWD:
+    properties:
+      id:
+        type: integer
+      newPWD:
+        type: string
+    type: object
   entities.AdminCreate:
     properties:
       password:
         type: string
       phone:
         type: integer
+    type: object
+  entities.AdminLogin:
+    properties:
+      password:
+        type: string
+      phone:
+        type: integer
+    type: object
+  entities.BreadBase:
+    properties:
+      count:
+        type: integer
+      description:
+        type: string
+      name:
+        type: string
+      photo:
+        type: string
+      price:
+        type: number
     type: object
   entities.UserCreate:
     properties:
@@ -25,6 +52,71 @@ definitions:
 info:
   contact: {}
 paths:
+  /admin/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: AdminID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully get user, returning JWT and Session
+          schema:
+            type: integer
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get admin
+      tags:
+      - public
+  /admin/change:
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: admin change pwd
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/entities.AdminChangePWD'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully change pwd, returning JWT and Session
+          schema:
+            type: integer
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: ChangePWD admin
+      tags:
+      - public
   /admin/create:
     post:
       consumes:
@@ -56,6 +148,136 @@ paths:
               type: string
             type: object
       summary: Create admin
+      tags:
+      - public
+  /admin/delete/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: AdminID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully delite user, returning JWT and Session
+          schema:
+            type: integer
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delite admin
+      tags:
+      - public
+  /admin/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: admin login
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/entities.AdminLogin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully login user, returning JWT and Session
+          schema:
+            type: integer
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Login admin
+      tags:
+      - public
+  /bread/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: BreadID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully get bread, returning JWT and Session
+          schema:
+            type: integer
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get bread
+      tags:
+      - public
+  /bread/create:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: bread create
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/entities.BreadBase'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully created bread, returning JWT and Session
+          schema:
+            type: integer
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create bread
       tags:
       - public
   /user/{id}:

@@ -29,8 +29,8 @@ func (adm AdminService) Login(ctx context.Context, adminLogin entities.AdminLogi
 	return id, nil
 }
 
-func (adm AdminService) GetMe(ctx context.Context, studentID int) (*entities.Admin, error) {
-	admin, err := adm.AdminRepo.GetAdminByID(ctx, studentID)
+func (adm AdminService) GetMe(ctx context.Context, adminID int) (*entities.Admin, error) {
+	admin, err := adm.AdminRepo.GetAdminByID(ctx, adminID)
 	if err != nil {
 		return nil, err
 	}
@@ -43,12 +43,12 @@ func (adm AdminService) AdminCreate(ctx context.Context, adminCreate entities.Ad
 		return 0, err
 	}
 
-	newStudent := entities.AdminCreate{
+	newAdmin := entities.AdminCreate{
 		AdminBase: adminCreate.AdminBase,
 		Password:  string(hashed_password),
 	}
 
-	id, err := adm.AdminRepo.CreateAdmin(ctx, newStudent)
+	id, err := adm.AdminRepo.CreateAdmin(ctx, newAdmin)
 	if err != nil {
 		return 0, err
 	}

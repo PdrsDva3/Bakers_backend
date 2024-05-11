@@ -19,7 +19,7 @@ func InitBreadHandler(service service.BreadService) BreadHandler {
 }
 
 // @Summary Create bread
-// @Tags public
+// @Tags bread
 // @Accept  json
 // @Produce  json
 // @Param data body entities.BreadBase true "bread create"
@@ -47,7 +47,7 @@ func (p BreadHandler) CreateBread(c *gin.Context) {
 }
 
 // @Summary Get bread
-// @Tags public
+// @Tags bread
 // @Accept  json
 // @Produce  json
 // @Param id query int true "BreadID"
