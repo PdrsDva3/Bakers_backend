@@ -1,2 +1,1 @@
-Preparation for Tatar.By
-Frontend on Serdeshnow repository
+Preparation for hack Tatar.By
