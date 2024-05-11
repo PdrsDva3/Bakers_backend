@@ -70,7 +70,7 @@ func (user RepositoryUser) UpdatePasswordByID(ctx context.Context, id int, passw
 	if err != nil {
 		return customerr.ErrorMessage(0, err)
 	}
-	result, err := transaction.ExecContext(ctx, `UPDATE users SET hached_password=$2 WHERE id=$1;`, id, password)
+	result, err := transaction.ExecContext(ctx, `UPDATE users SET hashed_password=$2 WHERE id=$1;`, id, password)
 	if err != nil {
 		if rbErr := transaction.Rollback(); rbErr != nil {
 			return customerr.ErrorMessage(3, err)

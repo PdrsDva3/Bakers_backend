@@ -9,6 +9,9 @@ type UserServ interface {
 	Create(ctx context.Context, user entities.UserCreate) (int, error)
 	Get(ctx context.Context, id int) (*entities.User, error)
 	Login(ctx context.Context, user entities.UserLogin) (*entities.User, error)
+	ChangePassword(ctx context.Context, id int, newPassword string) error
+	ChangeName(ctx context.Context, id int, name string) error
+	Delete(ctx context.Context, id int) error
 }
 
 type AdminService interface {
