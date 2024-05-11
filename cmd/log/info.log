@@ -11,3 +11,9 @@
 {"level":"info","time":"2024-05-10T19:43:36Z","caller":"C:/Users/aria_/GolandProjects/Bakers_backend/pkg/logger/logger.go:15","message":"Database initialized"}
 {"level":"info","time":"2024-05-10T19:46:00Z","caller":"C:/Users/aria_/GolandProjects/Bakers_backend/pkg/logger/logger.go:15","message":"Config initialized"}
 {"level":"info","time":"2024-05-10T19:46:00Z","caller":"C:/Users/aria_/GolandProjects/Bakers_backend/pkg/logger/logger.go:15","message":"Database initialized"}
+{"level":"info","time":"2024-05-11T14:30:33Z","caller":"C:/Users/Lol/GolandProjects/Bakers_backend/pkg/logger/logger.go:15","message":"Config initialized"}
+{"level":"info","time":"2024-05-11T14:30:33Z","caller":"C:/Users/Lol/GolandProjects/Bakers_backend/pkg/logger/logger.go:15","message":"Database initialized"}
+{"level":"info","time":"2024-05-11T14:52:06Z","caller":"C:/Users/Lol/GolandProjects/Bakers_backend/pkg/logger/logger.go:15","message":"Config initialized"}
+{"level":"info","time":"2024-05-11T14:52:06Z","caller":"C:/Users/Lol/GolandProjects/Bakers_backend/pkg/logger/logger.go:15","message":"Database initialized"}
+{"level":"info","time":"2024-05-11T16:17:11Z","caller":"C:/Users/Lol/GolandProjects/Bakers_backend/pkg/logger/logger.go:15","message":"Config initialized"}
+{"level":"info","time":"2024-05-11T16:17:11Z","caller":"C:/Users/Lol/GolandProjects/Bakers_backend/pkg/logger/logger.go:15","message":"Database initialized"}

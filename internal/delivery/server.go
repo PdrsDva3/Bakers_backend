@@ -4,7 +4,9 @@ import (
 	"Bakers_backend/docs"
 	"Bakers_backend/internal/delivery/handlers"
 	"Bakers_backend/internal/repository/admin"
+	"Bakers_backend/internal/repository/user"
 	adminserv "Bakers_backend/internal/service/admin"
+	userserv "Bakers_backend/internal/service/user"
 	"Bakers_backend/pkg/logger"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -23,23 +25,22 @@ func Start(db *sqlx.DB, logger *logger.Logs) {
 
 	// todo: имплементировать cors middleware
 	//middlewareStruct := middleware.InitMiddleware(logger, jwtUtils, session)
-
 	//r.Use(middlewareStruct.CORSMiddleware())
 
-	//routers.InitRouting(r, db, logger, middlewareStruct, jwtUtils, session, tracer)
+	adminRouter := r.Group("/admin")
+	userRouter := r.Group("/user")
 
-	publicRouter := r.Group("/admin")
+	adminRepo := admin.NewAdminRepo(db)
+	userRepo := user.InitUserRepository(db)
 
-	userRepo := admin.NewAdminRepo(db)
+	adminService := adminserv.InitAdminService(adminRepo)
+	userService := userserv.InitUserService(userRepo)
 
-	publicService := adminserv.InitAdminService(userRepo)
-	adminHandler := handlers.InitPublicHandler(publicService)
+	adminHandler := handlers.InitPublicHandler(adminService)
+	userHandler := handlers.InitUserHandler(userService)
 
-	publicRouter.POST("/create", adminHandler.CreateAdmin)
-
-	//publicRouter.POST("/login", publicHandler.LoginUser)
-	//
-	//publicRouter.POST("/refresh", publicHandler.Refresh)
+	adminRouter.POST("/create", adminHandler.CreateAdmin)
+	userRouter.POST("/create", userHandler.CreateUser)
 
 	if err := r.Run("0.0.0.0:8080"); err != nil {
 		panic(fmt.Sprintf("error running client: %v", err.Error()))

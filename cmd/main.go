@@ -20,5 +20,5 @@ func main() {
 	log.Info("Database initialized")
 
 	delivery.Start(db, log)
-	//db.Close() // !! УДАЛИТЬ ПРИ ЗАПУСКЕ
+
 }
