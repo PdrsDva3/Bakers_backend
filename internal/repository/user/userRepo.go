@@ -42,26 +42,27 @@ func (user RepositoryUser) Create(ctx context.Context, create entities.UserCreat
 	return id, nil
 }
 
-func (user RepositoryUser) Get(ctx context.Context, id int) (entities.User, error) {
+func (user RepositoryUser) Get(ctx context.Context, id int) (*entities.User, error) {
 	var OldUser entities.User
 	rows := user.db.QueryRowContext(ctx, `SELECT phone, name FROM users WHERE id = $1;`, id)
 
 	err := rows.Scan(&OldUser.Phone, &OldUser.Name)
 	if err != nil {
-		return entities.User{}, customerr.ErrorMessage(6, err)
+		return &entities.User{}, customerr.ErrorMessage(6, err)
 	}
 	OldUser.ID = id
-	return OldUser, nil
+	return &OldUser, nil
 }
 
-func (user RepositoryUser) GetHashedPasswordByPhone(ctx context.Context, phone string) (string, error) {
+func (user RepositoryUser) GetHashedPasswordByPhone(ctx context.Context, phone int64) (int, string, error) {
 	var hsh_password string
-	row := user.db.QueryRowContext(ctx, `SELECT hashed_password FROM users WHERE phone = $1;`, phone)
-	err := row.Scan(&hsh_password)
+	var id int
+	row := user.db.QueryRowContext(ctx, `SELECT id, hashed_password FROM users WHERE phone = $1;`, phone)
+	err := row.Scan(&id, &hsh_password)
 	if err != nil {
-		return "", customerr.ErrorMessage(6, err)
+		return 0, "", customerr.ErrorMessage(6, err)
 	}
-	return hsh_password, nil
+	return id, hsh_password, nil
 }
 
 func (user RepositoryUser) UpdatePasswordByID(ctx context.Context, id int, password string) error {
