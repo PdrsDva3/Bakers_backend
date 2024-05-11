@@ -8,10 +8,9 @@ import (
 type AdminRepo interface {
 	CreateAdmin(ctx context.Context, admin entities.AdminCreate) (int, error)
 	GetAdminByID(ctx context.Context, adminID int) (*entities.Admin, error)
-	GetPasswordByPhone(ctx context.Context, phone int) (string, error)
+	GetPasswordByPhone(ctx context.Context, phone int64) (int, string, error)
 	UpdatePasswordByID(ctx context.Context, adminID int, newPassword string) error
 	DeleteAdmin(ctx context.Context, adminID int) error
-	CreateBread(ctx context.Context, bread entities.BreadBase) (int, error)
 }
 
 type UserRepo interface {
@@ -29,4 +28,11 @@ type OrderRepo interface {
 	AddBreadByID(ctx context.Context, id int) error
 	DeleteBreadByID(ctx context.Context, id int) error
 	DeleteByID(ctx context.Context, id int) error
+}
+
+type BreadRepo interface {
+	Create(ctx context.Context, bread entities.BreadBase) (int, error)
+	GetBreadByID(ctx context.Context, breadID int) (*entities.Bread, error)
+	ChangeCountBreadByID(ctx context.Context, breadID int, count int64) (int64, error)
+	DeleteBread(ctx context.Context, breadID int) error
 }

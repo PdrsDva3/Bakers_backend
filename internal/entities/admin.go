@@ -10,11 +10,16 @@ type AdminCreate struct {
 }
 
 type AdminLogin struct {
-	Phone    int64  `json:"login"`
+	Phone    int64  `json:"phone"`
 	Password string `json:"password"`
 }
 
 type Admin struct {
 	AdminBase
 	AdminID int `json:"id"`
+}
+
+type AdminChangePWD struct {
+	AdminID int    `json:"id"`
+	NewPWD  string `json:"newPWD"`
 }

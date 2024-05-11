@@ -4,6 +4,7 @@ import (
 	"Bakers_backend/internal/entities"
 	"Bakers_backend/internal/repository"
 	"Bakers_backend/internal/service"
+	"Bakers_backend/pkg/customerr"
 	"context"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -16,10 +17,30 @@ type AdminService struct {
 	AdminRepo repository.AdminRepo
 }
 
+func (adm AdminService) Login(ctx context.Context, adminLogin entities.AdminLogin) (int, error) {
+	id, pwd, err := adm.AdminRepo.GetPasswordByPhone(ctx, adminLogin.Phone)
+	if err != nil {
+		return 0, err
+	}
+	err = bcrypt.CompareHashAndPassword([]byte(pwd), []byte(adminLogin.Password))
+	if err != nil {
+		return 0, customerr.ErrorMessage(1, "pwd not equal")
+	}
+	return id, nil
+}
+
+func (adm AdminService) GetMe(ctx context.Context, studentID int) (*entities.Admin, error) {
+	admin, err := adm.AdminRepo.GetAdminByID(ctx, studentID)
+	if err != nil {
+		return nil, err
+	}
+	return admin, nil
+}
+
 func (adm AdminService) AdminCreate(ctx context.Context, adminCreate entities.AdminCreate) (int, error) {
 	hashed_password, err := bcrypt.GenerateFromPassword([]byte(adminCreate.Password), 10)
 	if err != nil {
-		return 0, nil
+		return 0, err
 	}
 
 	newStudent := entities.AdminCreate{
@@ -33,4 +54,24 @@ func (adm AdminService) AdminCreate(ctx context.Context, adminCreate entities.Ad
 	}
 
 	return id, nil
+}
+
+func (adm AdminService) Delete(ctx context.Context, adminID int) error {
+	err := adm.AdminRepo.DeleteAdmin(ctx, adminID)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (adm AdminService) ChangePassword(ctx context.Context, adminID int, newPWD string) error {
+	hashed_password, err := bcrypt.GenerateFromPassword([]byte(newPWD), 10)
+	if err != nil {
+		return err
+	}
+	err = adm.AdminRepo.UpdatePasswordByID(ctx, adminID, string(hashed_password))
+	if err != nil {
+		return err
+	}
+	return nil
 }

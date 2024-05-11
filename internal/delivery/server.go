@@ -4,7 +4,9 @@ import (
 	"Bakers_backend/docs"
 	"Bakers_backend/internal/delivery/handlers"
 	"Bakers_backend/internal/repository/admin"
+	"Bakers_backend/internal/repository/bread"
 	adminserv "Bakers_backend/internal/service/admin"
+	breadserv "Bakers_backend/internal/service/bread"
 	"Bakers_backend/pkg/logger"
 	"fmt"
 	"github.com/gin-gonic/gin"
@@ -28,18 +30,26 @@ func Start(db *sqlx.DB, logger *logger.Logs) {
 
 	//routers.InitRouting(r, db, logger, middlewareStruct, jwtUtils, session, tracer)
 
-	publicRouter := r.Group("/admin")
+	adminRouter := r.Group("/admin")
 
-	userRepo := admin.NewAdminRepo(db)
+	adminRepo := admin.InitAdminRepo(db)
+	adminService := adminserv.InitAdminService(adminRepo)
+	adminHandler := handlers.InitAdminHandler(adminService)
 
-	publicService := adminserv.InitAdminService(userRepo)
-	adminHandler := handlers.InitPublicHandler(publicService)
+	adminRouter.POST("/create", adminHandler.CreateAdmin)
+	adminRouter.POST("/login", adminHandler.LoginAdmin)
+	adminRouter.GET("/:id", adminHandler.GetAdmin)
+	adminRouter.DELETE("/delete/:id", adminHandler.DeleteAdmin)
+	adminRouter.PUT("/change", adminHandler.ChangePWD)
 
-	publicRouter.POST("/create", adminHandler.CreateAdmin)
+	breadRouter := r.Group("/bread")
 
-	//publicRouter.POST("/login", publicHandler.LoginUser)
-	//
-	//publicRouter.POST("/refresh", publicHandler.Refresh)
+	breadRepo := bread.InitBreadRepo(db)
+	breadService := breadserv.InitBreadService(breadRepo)
+	breadHandler := handlers.InitBreadHandler(breadService)
+
+	breadRouter.POST("/create", breadHandler.CreateBread)
+	breadRouter.GET("/:id", breadHandler.GetBread)
 
 	if err := r.Run("0.0.0.0:8080"); err != nil {
 		panic(fmt.Sprintf("error running client: %v", err.Error()))
