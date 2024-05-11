@@ -7,7 +7,8 @@ import (
 
 type UserServ interface {
 	Create(ctx context.Context, user entities.UserCreate) (int, error)
-	GetUserByID(ctx context.Context, id int) (entities.User, error)
+	Get(ctx context.Context, id int) (*entities.User, error)
+	Login(ctx context.Context, user entities.UserLogin) (*entities.User, error)
 }
 
 type AdminService interface {

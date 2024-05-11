@@ -15,6 +15,13 @@ definitions:
       phone:
         type: integer
     type: object
+  entities.UserLogin:
+    properties:
+      password:
+        type: string
+      phone:
+        type: integer
+    type: object
 info:
   contact: {}
 paths:
@@ -51,6 +58,38 @@ paths:
       summary: Create admin
       tags:
       - public
+  /user/{id}:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: UserID
+        in: query
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully get user
+          schema:
+            type: integer
+        "400":
+          description: Invalid UserID
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get user
+      tags:
+      - user
   /user/create:
     post:
       consumes:
@@ -83,5 +122,38 @@ paths:
             type: object
       summary: Create user
       tags:
-      - public
+      - user
+  /user/login:
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: user login
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/entities.UserLogin'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully login user
+          schema:
+            type: integer
+        "400":
+          description: Invalid password
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Login user
+      tags:
+      - user
 swagger: "2.0"
