@@ -12,3 +12,8 @@ type Bread struct {
 	BreadBase
 	ID int `json:"id"`
 }
+
+type BreadChange struct {
+	BreadID int `json:"id"`
+	Count   int `json:"count"`
+}

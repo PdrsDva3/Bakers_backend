@@ -35,6 +35,6 @@ type OrderRepo interface {
 type BreadRepo interface {
 	Create(ctx context.Context, bread entities.BreadBase) (int, error)
 	GetBreadByID(ctx context.Context, breadID int) (*entities.Bread, error)
-	ChangeCountBreadByID(ctx context.Context, breadID int, count int64) (int64, error)
+	ChangeCountBreadByID(ctx context.Context, breadID int, count int) (int, error)
 	DeleteBread(ctx context.Context, breadID int) error
 }

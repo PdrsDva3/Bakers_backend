@@ -21,7 +21,7 @@ func (user RepositoryUser) Create(ctx context.Context, create entities.UserCreat
 	var id int
 	transaction, err := user.db.BeginTxx(ctx, nil)
 	if err != nil {
-		return 0, customerr.ErrorMessage(0, err)
+		return 0, cerr.Err(cerr.User, cerr.Repository, cerr.Transaction, err).Error()
 	}
 	row := transaction.QueryRowContext(ctx, `INSERT INTO users (phone, name, hashed_password) VALUES ($1, $2, $3) returning id;`,
 		create.Phone, create.Name, create.Password)
@@ -29,15 +29,15 @@ func (user RepositoryUser) Create(ctx context.Context, create entities.UserCreat
 	err = row.Scan(&id)
 	if err != nil {
 		if rbErr := transaction.Rollback(); rbErr != nil {
-			return 0, customerr.ErrorMessage(3, err)
+			return 0, cerr.Err(cerr.User, cerr.Repository, cerr.Rollback, rbErr).Error()
 		}
-		return 0, customerr.ErrorMessage(6, err)
+		return 0, cerr.Err(cerr.User, cerr.Repository, cerr.Scan, err).Error()
 	}
 	if err := transaction.Commit(); err != nil {
 		if rbErr := transaction.Rollback(); rbErr != nil {
-			return 0, customerr.ErrorMessage(3, err)
+			return 0, cerr.Err(cerr.User, cerr.Repository, cerr.Rollback, rbErr).Error()
 		}
-		return 0, customerr.ErrorMessage(5, err)
+		return 0, cerr.Err(cerr.User, cerr.Repository, cerr.Commit, err).Error()
 	}
 	return id, nil
 }
@@ -48,7 +48,7 @@ func (user RepositoryUser) Get(ctx context.Context, id int) (*entities.User, err
 
 	err := rows.Scan(&OldUser.Phone, &OldUser.Name)
 	if err != nil {
-		return &entities.User{}, customerr.ErrorMessage(6, err)
+		return nil, cerr.Err(cerr.User, cerr.Repository, cerr.Scan, err).Error()
 	}
 	OldUser.ID = id
 	return &OldUser, nil
@@ -60,7 +60,7 @@ func (user RepositoryUser) GetHashedPasswordByPhone(ctx context.Context, phone i
 	row := user.db.QueryRowContext(ctx, `SELECT id, hashed_password FROM users WHERE phone = $1;`, phone)
 	err := row.Scan(&id, &hsh_password)
 	if err != nil {
-		return 0, "", customerr.ErrorMessage(6, err)
+		return 0, "", cerr.Err(cerr.User, cerr.Repository, cerr.Scan, err).Error()
 	}
 	return id, hsh_password, nil
 }
@@ -68,35 +68,36 @@ func (user RepositoryUser) GetHashedPasswordByPhone(ctx context.Context, phone i
 func (user RepositoryUser) UpdatePasswordByID(ctx context.Context, id int, password string) error {
 	transaction, err := user.db.BeginTxx(ctx, nil)
 	if err != nil {
-		return customerr.ErrorMessage(0, err)
+		return cerr.Err(cerr.User, cerr.Repository, cerr.Transaction, err).Error()
 	}
 	result, err := transaction.ExecContext(ctx, `UPDATE users SET hashed_password=$2 WHERE id=$1;`, id, password)
 	if err != nil {
 		if rbErr := transaction.Rollback(); rbErr != nil {
-			return customerr.ErrorMessage(3, err)
+			return cerr.Err(cerr.User, cerr.Repository, cerr.Rollback, rbErr).Error()
 		}
-		return customerr.ErrorMessage(7, err)
+		return cerr.Err(cerr.User, cerr.Repository, cerr.ExecCon, err).Error()
 	}
 
 	count, err := result.RowsAffected()
 	if err != nil {
 		if rbErr := transaction.Rollback(); rbErr != nil {
-			return customerr.ErrorMessage(3, err)
+			return cerr.Err(cerr.User, cerr.Repository, cerr.Rollback, rbErr).Error()
 		}
-		return customerr.ErrorMessage(7, err)
-	}
-	if count != 1 {
-		if rbErr := transaction.Rollback(); rbErr != nil {
-			return customerr.ErrorMessage(3, err)
-		}
-		return customerr.ErrorMessage(8, err)
+		return cerr.Err(cerr.User, cerr.Repository, cerr.Rows, err).Error()
 	}
 
-	if err := transaction.Commit(); err != nil {
+	if count != 1 {
 		if rbErr := transaction.Rollback(); rbErr != nil {
-			return customerr.ErrorMessage(3, err)
+			return cerr.Err(cerr.User, cerr.Repository, cerr.Rollback, rbErr).Error()
 		}
-		return customerr.ErrorMessage(5, err)
+		return cerr.Err(cerr.User, cerr.Repository, cerr.NoOneRow, err).Error()
+	}
+
+	if err = transaction.Commit(); err != nil {
+		if rbErr := transaction.Rollback(); rbErr != nil {
+			return cerr.Err(cerr.User, cerr.Repository, cerr.Rollback, rbErr).Error()
+		}
+		return cerr.Err(cerr.User, cerr.Repository, cerr.Commit, err).Error()
 	}
 	return nil
 }
@@ -104,35 +105,36 @@ func (user RepositoryUser) UpdatePasswordByID(ctx context.Context, id int, passw
 func (user RepositoryUser) UpdateNameByID(ctx context.Context, id int, name string) error {
 	transaction, err := user.db.BeginTxx(ctx, nil)
 	if err != nil {
-		return customerr.ErrorMessage(0, err)
+		return cerr.Err(cerr.User, cerr.Repository, cerr.Transaction, err).Error()
 	}
 	result, err := transaction.ExecContext(ctx, `UPDATE users SET name=$2 WHERE id=$1;`, id, name)
 	if err != nil {
 		if rbErr := transaction.Rollback(); rbErr != nil {
-			return customerr.ErrorMessage(3, err)
+			return cerr.Err(cerr.User, cerr.Repository, cerr.Rollback, rbErr).Error()
 		}
-		return customerr.ErrorMessage(7, err)
+		return cerr.Err(cerr.User, cerr.Repository, cerr.ExecCon, err).Error()
 	}
 
 	count, err := result.RowsAffected()
 	if err != nil {
 		if rbErr := transaction.Rollback(); rbErr != nil {
-			return customerr.ErrorMessage(3, err)
+			return cerr.Err(cerr.User, cerr.Repository, cerr.Rollback, rbErr).Error()
 		}
-		return customerr.ErrorMessage(7, err)
-	}
-	if count != 1 {
-		if rbErr := transaction.Rollback(); rbErr != nil {
-			return customerr.ErrorMessage(3, err)
-		}
-		return customerr.ErrorMessage(8, err)
+		return cerr.Err(cerr.User, cerr.Repository, cerr.Rows, err).Error()
 	}
 
-	if err := transaction.Commit(); err != nil {
+	if count != 1 {
 		if rbErr := transaction.Rollback(); rbErr != nil {
-			return customerr.ErrorMessage(3, err)
+			return cerr.Err(cerr.User, cerr.Repository, cerr.Rollback, rbErr).Error()
 		}
-		return customerr.ErrorMessage(5, err)
+		return cerr.Err(cerr.User, cerr.Repository, cerr.NoOneRow, err).Error()
+	}
+
+	if err = transaction.Commit(); err != nil {
+		if rbErr := transaction.Rollback(); rbErr != nil {
+			return cerr.Err(cerr.User, cerr.Repository, cerr.Rollback, rbErr).Error()
+		}
+		return cerr.Err(cerr.User, cerr.Repository, cerr.Commit, err).Error()
 	}
 	return nil
 }
@@ -140,36 +142,35 @@ func (user RepositoryUser) UpdateNameByID(ctx context.Context, id int, name stri
 func (user RepositoryUser) DeleteByID(ctx context.Context, id int) error {
 	transaction, err := user.db.BeginTxx(ctx, nil)
 	if err != nil {
-		return customerr.ErrorMessage(0, err)
+		return cerr.Err(cerr.User, cerr.Repository, cerr.Transaction, err).Error()
 	}
 	result, err := transaction.ExecContext(ctx, `DELETE FROM users WHERE id=$1;`, id)
 	if err != nil {
 		if rbErr := transaction.Rollback(); rbErr != nil {
-			return customerr.ErrorMessage(3, err)
+			return cerr.Err(cerr.User, cerr.Repository, cerr.Rollback, rbErr).Error()
 		}
-		return customerr.ErrorMessage(7, err)
+		return cerr.Err(cerr.User, cerr.Repository, cerr.ExecCon, err).Error()
 	}
-
 	count, err := result.RowsAffected()
 	if err != nil {
 		if rbErr := transaction.Rollback(); rbErr != nil {
-			return customerr.ErrorMessage(3, err)
+			return cerr.Err(cerr.User, cerr.Repository, cerr.Rollback, rbErr).Error()
 		}
-		return customerr.ErrorMessage(7, err)
+		return cerr.Err(cerr.User, cerr.Repository, cerr.Rows, err).Error()
 	}
 	if count != 1 {
 		if rbErr := transaction.Rollback(); rbErr != nil {
-			return customerr.ErrorMessage(3, err)
+			return cerr.Err(cerr.User, cerr.Repository, cerr.Rollback, rbErr).Error()
 		}
-		return customerr.ErrorMessage(8, err)
+		return cerr.Err(cerr.User, cerr.Repository, cerr.NoOneRow, err).Error()
+	}
+	if err = transaction.Commit(); err != nil {
+		if rbErr := transaction.Rollback(); rbErr != nil {
+			return cerr.Err(cerr.User, cerr.Repository, cerr.Rollback, rbErr).Error()
+		}
+		return cerr.Err(cerr.User, cerr.Repository, cerr.Commit, err).Error()
 	}
 
-	if err := transaction.Commit(); err != nil {
-		if rbErr := transaction.Rollback(); rbErr != nil {
-			return customerr.ErrorMessage(3, err)
-		}
-		return customerr.ErrorMessage(5, err)
-	}
 	return nil
 
 }
