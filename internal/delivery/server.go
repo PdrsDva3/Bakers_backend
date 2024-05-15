@@ -3,6 +3,7 @@ package delivery
 import (
 	"Bakers_backend/docs"
 	"Bakers_backend/internal/delivery/handlers"
+	"Bakers_backend/internal/delivery/middleware"
 	"Bakers_backend/internal/repository/admin"
 	"Bakers_backend/internal/repository/bread"
 	"Bakers_backend/internal/repository/user"
@@ -21,12 +22,13 @@ import (
 func Start(db *sqlx.DB, logger *logger.Logs) {
 	r := gin.Default()
 	r.ForwardedByClientIP = true
+	//r.SetTrustedProxies([]string{"127.0.0.1"})
 	docs.SwaggerInfo.BasePath = "/"
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	// todo: имплементировать cors middleware
-	//middlewareStruct := middleware.InitMiddleware(logger, jwtUtils, session)
-	//r.Use(middlewareStruct.CORSMiddleware())
+	//todo: имплементировать cors middleware
+	middlewareStruct := middleware.InitMiddleware(logger)
+	r.Use(middlewareStruct.CORSMiddleware())
 
 	userRouter := r.Group("/user")
 
@@ -37,6 +39,9 @@ func Start(db *sqlx.DB, logger *logger.Logs) {
 	userRouter.POST("/create", userHandler.CreateUser)
 	userRouter.POST("/login", userHandler.Login)
 	userRouter.GET("/:id", userHandler.Get)
+	userRouter.PUT("/change/password", userHandler.ChangePassword)
+	userRouter.PUT("/change/name", userHandler.ChangeName)
+	userRouter.DELETE("/delete/:id", userHandler.Delete)
 
 	adminRouter := r.Group("/admin")
 
@@ -58,8 +63,6 @@ func Start(db *sqlx.DB, logger *logger.Logs) {
 
 	breadRouter.POST("/create", breadHandler.CreateBread)
 	breadRouter.GET("/:id", breadHandler.GetBread)
-	breadRouter.DELETE("/delete/:id", breadHandler.DeleteBread)
-	breadRouter.PUT("/change", breadHandler.ChangeCount)
 
 	if err := r.Run("0.0.0.0:8080"); err != nil {
 		panic(fmt.Sprintf("error running client: %v", err.Error()))

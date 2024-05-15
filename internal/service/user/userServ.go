@@ -83,3 +83,29 @@ func (usr ServiceUser) Login(ctx context.Context, user entities.UserLogin) (*ent
 	}
 	return userr, nil
 }
+
+func (usr ServiceUser) ChangePassword(ctx context.Context, id int, password string) error {
+	hashed_password, err := bcrypt.GenerateFromPassword([]byte(password), 10)
+	if err != nil {
+		return err
+	}
+	err = usr.UserRepo.UpdatePasswordByID(ctx, id, string(hashed_password))
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (usr ServiceUser) ChangeName(ctx context.Context, id int, nname string) error {
+	if err := usr.UserRepo.UpdateNameByID(ctx, id, nname); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (usr ServiceUser) Delete(ctx context.Context, id int) error {
+	if err := usr.UserRepo.DeleteByID(ctx, id); err != nil {
+		return errors.New("Delete error")
+	}
+	return nil
+}

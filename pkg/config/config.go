@@ -20,6 +20,7 @@ func InitConfig() {
 	path, _ := os.Getwd()
 
 	path = filepath.Join(path, "..")
+	path = filepath.Join(path, "/deploy")
 
 	viper.SetConfigName(".env")
 	viper.SetConfigType("env")

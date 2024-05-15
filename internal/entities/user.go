@@ -15,6 +15,16 @@ type UserLogin struct {
 	Password string `json:"password"`
 }
 
+type UserChangePassword struct {
+	ID       int    `json:"id"`
+	Password string `json:"password"`
+}
+
+type UserChangeName struct {
+	ID   int    `json:"id"`
+	Name string `json:"name"`
+}
+
 type User struct {
 	UserBase
 	ID int `json:"id"`
