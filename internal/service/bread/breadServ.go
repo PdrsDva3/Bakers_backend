@@ -4,6 +4,7 @@ import (
 	"Bakers_backend/internal/entities"
 	"Bakers_backend/internal/repository"
 	"Bakers_backend/internal/service"
+	cerr "Bakers_backend/pkg/customerr"
 	"context"
 )
 
@@ -28,5 +29,25 @@ func (brd BreadService) GetBread(ctx context.Context, breadID int) (*entities.Br
 	if err != nil {
 		return nil, err
 	}
+	if bread == nil {
+		return nil, cerr.Err(cerr.Bread, cerr.Service, cerr.NotFound, nil).Error()
+	}
+
 	return bread, nil
+}
+
+func (brd BreadService) ChangeBread(ctx context.Context, breadID int, count int) (int, error) {
+	newCount, err := brd.BreadRepo.ChangeCountBreadByID(ctx, breadID, count)
+	if err != nil {
+		return 0, err
+	}
+	return newCount, nil
+}
+
+func (brd BreadService) DeleteBread(ctx context.Context, breadID int) error {
+	err := brd.BreadRepo.DeleteBread(ctx, breadID)
+	if err != nil {
+		return err
+	}
+	return nil
 }

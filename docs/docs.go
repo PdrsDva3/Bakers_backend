@@ -24,7 +24,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "public"
+                    "admin"
                 ],
                 "summary": "ChangePWD admin",
                 "parameters": [
@@ -75,7 +75,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "public"
+                    "admin"
                 ],
                 "summary": "Create admin",
                 "parameters": [
@@ -126,9 +126,9 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "public"
+                    "admin"
                 ],
-                "summary": "Delite admin",
+                "summary": "Delete admin",
                 "parameters": [
                     {
                         "type": "integer",
@@ -140,7 +140,7 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "200": {
-                        "description": "Successfully delite user, returning JWT and Session",
+                        "description": "Successfully delete user, returning JWT and Session",
                         "schema": {
                             "type": "integer"
                         }
@@ -175,7 +175,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "public"
+                    "admin"
                 ],
                 "summary": "Login admin",
                 "parameters": [
@@ -226,7 +226,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "public"
+                    "admin"
                 ],
                 "summary": "Get admin",
                 "parameters": [
@@ -266,6 +266,57 @@ const docTemplate = `{
                 }
             }
         },
+        "/bread/change": {
+            "put": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "bread"
+                ],
+                "summary": "ChangeCount bread",
+                "parameters": [
+                    {
+                        "description": "bread change count (add or sub)",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/entities.BreadChange"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully change count",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/bread/create": {
             "post": {
                 "consumes": [
@@ -275,7 +326,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "public"
+                    "bread"
                 ],
                 "summary": "Create bread",
                 "parameters": [
@@ -317,6 +368,55 @@ const docTemplate = `{
                 }
             }
         },
+        "/bread/delete/{id}": {
+            "delete": {
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "bread"
+                ],
+                "summary": "Delete bread",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "BreadID",
+                        "name": "id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully delete bread",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal server error",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/bread/{id}": {
             "get": {
                 "consumes": [
@@ -326,7 +426,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "public"
+                    "bread"
                 ],
                 "summary": "Get bread",
                 "parameters": [
@@ -569,6 +669,17 @@ const docTemplate = `{
                 },
                 "price": {
                     "type": "number"
+                }
+            }
+        },
+        "entities.BreadChange": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "integer"
+                },
+                "id": {
+                    "type": "integer"
                 }
             }
         },

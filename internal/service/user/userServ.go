@@ -4,8 +4,8 @@ import (
 	"Bakers_backend/internal/entities"
 	"Bakers_backend/internal/repository"
 	"Bakers_backend/internal/service"
+	cerr "Bakers_backend/pkg/customerr"
 	"context"
-	"errors"
 	"golang.org/x/crypto/bcrypt"
 	"regexp"
 	"strconv"
@@ -35,7 +35,10 @@ func validatePhone(phone string) bool {
 }
 
 func (usr ServiceUser) Create(ctx context.Context, user entities.UserCreate) (int, error) {
-	hashedPassword, _ := bcrypt.GenerateFromPassword([]byte(user.Password), 10)
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), 10)
+	if err != nil {
+		return 0, cerr.Err(cerr.User, cerr.Service, cerr.Hash, err).Error()
+	}
 	newUser := entities.UserCreate{
 		UserBase: user.UserBase,
 		Password: string(hashedPassword),
@@ -43,7 +46,7 @@ func (usr ServiceUser) Create(ctx context.Context, user entities.UserCreate) (in
 
 	flag := validatePhone(strconv.FormatInt(user.Phone, 10))
 	if !flag {
-		return 0, errors.New("invalid phone")
+		return 0, cerr.Err(cerr.User, cerr.Service, cerr.InvalidPhone, nil).Error()
 	}
 
 	id, err := usr.UserRepo.Create(ctx, newUser)
@@ -60,9 +63,8 @@ func (usr ServiceUser) Get(ctx context.Context, id int) (*entities.User, error) 
 		return nil, err
 	}
 	if user == nil {
-		return nil, errors.New("User not found")
+		return nil, cerr.Err(cerr.User, cerr.Service, cerr.NotFound, nil).Error()
 	}
-
 	return user, nil
 }
 
@@ -73,7 +75,7 @@ func (usr ServiceUser) Login(ctx context.Context, user entities.UserLogin) (*ent
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(hashed_password), []byte(user.Password))
 	if err != nil {
-		return nil, errors.New("Invalid password")
+		return nil, cerr.Err(cerr.User, cerr.Service, cerr.InvalidPWD, err).Error()
 	}
 	userr, err := usr.UserRepo.Get(ctx, id)
 	if err != nil {

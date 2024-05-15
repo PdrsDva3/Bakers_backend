@@ -3,9 +3,11 @@ package handlers
 import (
 	"Bakers_backend/internal/entities"
 	"Bakers_backend/internal/service"
+	"context"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+	"time"
 )
 
 type AdminHandler struct {
@@ -35,7 +37,8 @@ func (p AdminHandler) CreateAdmin(c *gin.Context) {
 		return
 	}
 
-	ctx := c.Request.Context()
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
 
 	id, err := p.service.AdminCreate(ctx, adminCreate)
 	if err != nil {
@@ -44,34 +47,6 @@ func (p AdminHandler) CreateAdmin(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"id": id})
-}
-
-// @Summary ChangePWD admin
-// @Tags admin
-// @Accept  json
-// @Produce  json
-// @Param data body entities.AdminChangePWD true "admin change pwd"
-// @Success 200 {object} int "Successfully change pwd, returning JWT and Session"
-// @Failure 400 {object} map[string]string "Invalid input"
-// @Failure 500 {object} map[string]string "Internal server error"
-// @Router /admin/change [put]
-func (p AdminHandler) ChangePWD(c *gin.Context) {
-	var changePWD entities.AdminChangePWD
-
-	if err := c.ShouldBindJSON(&changePWD); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	ctx := c.Request.Context()
-
-	err := p.service.ChangePassword(ctx, changePWD.AdminID, changePWD.NewPWD)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{"change": "access"})
 }
 
 // @Summary Login admin
@@ -91,7 +66,8 @@ func (p AdminHandler) LoginAdmin(c *gin.Context) {
 		return
 	}
 
-	ctx := c.Request.Context()
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
 
 	id, err := p.service.Login(ctx, adminLogin)
 	if err != nil {
@@ -130,7 +106,35 @@ func (p AdminHandler) GetAdmin(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"admin": adm})
 }
 
-// @Summary Delite admin
+// @Summary ChangePWD admin
+// @Tags admin
+// @Accept  json
+// @Produce  json
+// @Param data body entities.AdminChangePWD true "admin change pwd"
+// @Success 200 {object} int "Successfully change pwd, returning JWT and Session"
+// @Failure 400 {object} map[string]string "Invalid input"
+// @Failure 500 {object} map[string]string "Internal server error"
+// @Router /admin/change [put]
+func (p AdminHandler) ChangePWD(c *gin.Context) {
+	var changePWD entities.AdminChangePWD
+
+	if err := c.ShouldBindJSON(&changePWD); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	ctx := c.Request.Context()
+
+	err := p.service.ChangePassword(ctx, changePWD.AdminID, changePWD.NewPWD)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"change": "access"})
+}
+
+// @Summary Delete admin
 // @Tags admin
 // @Accept  json
 // @Produce  json

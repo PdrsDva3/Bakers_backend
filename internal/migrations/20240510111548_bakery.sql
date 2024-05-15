@@ -29,19 +29,9 @@ CREATE TABLE IF NOT EXISTS orders(
 
 CREATE TABLE IF NOT EXISTS order_bread_link(
     id_order INTEGER REFERENCES orders(id),
-    id_bread INTEGER REFERENCES bread(id)
-);
+    id_bread INTEGER REFERENCES bread(id),
+    count_bread INTEGER
 
-CREATE TABLE IF NOT EXISTS courier(
-    id              SERIAL NOT NULL PRIMARY KEY,
-    name            VARCHAR,
-    phone           BIGINT UNIQUE,
-    hashed_password VARCHAR
-);
-
-CREATE TABLE IF NOT EXISTS order_courier_link(
-    id_order   INTEGER REFERENCES orders(id),
-    id_courier INTEGER REFERENCES courier (id)
 );
 
 CREATE TABLE IF NOT EXISTS chats(

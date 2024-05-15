@@ -6,8 +6,8 @@ import (
 	"Bakers_backend/internal/repository/admin"
 	"Bakers_backend/internal/repository/bread"
 	"Bakers_backend/internal/repository/user"
-	breadserv "Bakers_backend/internal/service/bread"
 	adminserv "Bakers_backend/internal/service/admin"
+	breadserv "Bakers_backend/internal/service/bread"
 	userserv "Bakers_backend/internal/service/user"
 	"Bakers_backend/pkg/logger"
 	"fmt"
@@ -21,7 +21,6 @@ import (
 func Start(db *sqlx.DB, logger *logger.Logs) {
 	r := gin.Default()
 	r.ForwardedByClientIP = true
-	r.SetTrustedProxies([]string{"127.0.0.1"})
 	docs.SwaggerInfo.BasePath = "/"
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
@@ -30,11 +29,11 @@ func Start(db *sqlx.DB, logger *logger.Logs) {
 	//r.Use(middlewareStruct.CORSMiddleware())
 
 	userRouter := r.Group("/user")
-	
+
 	userRepo := user.InitUserRepository(db)
 	userService := userserv.InitUserService(userRepo)
 	userHandler := handlers.InitUserHandler(userService)
-	
+
 	userRouter.POST("/create", userHandler.CreateUser)
 	userRouter.POST("/login", userHandler.Login)
 	userRouter.GET("/:id", userHandler.Get)
@@ -59,7 +58,9 @@ func Start(db *sqlx.DB, logger *logger.Logs) {
 
 	breadRouter.POST("/create", breadHandler.CreateBread)
 	breadRouter.GET("/:id", breadHandler.GetBread)
-  
+	breadRouter.DELETE("/delete/:id", breadHandler.DeleteBread)
+	breadRouter.PUT("/change", breadHandler.ChangeCount)
+
 	if err := r.Run("0.0.0.0:8080"); err != nil {
 		panic(fmt.Sprintf("error running client: %v", err.Error()))
 	}

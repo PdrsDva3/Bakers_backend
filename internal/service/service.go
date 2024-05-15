@@ -22,4 +22,6 @@ type AdminService interface {
 type BreadService interface {
 	BreadCreate(ctx context.Context, breadCreate entities.BreadBase) (int, error)
 	GetBread(ctx context.Context, breadID int) (*entities.Bread, error)
+	ChangeBread(ctx context.Context, breadID int, count int) (int, error)
+	DeleteBread(ctx context.Context, breadID int) error
 }
